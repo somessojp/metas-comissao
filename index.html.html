@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Metas e Comissão</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f5f7;
+      margin: 0;
+      padding: 16px;
+      color: #222;
+    }
+    .container { max-width: 1200px; margin: auto; }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    h1, h2 {
+      color: #0f3d70;
+      margin-top: 0;
+    }
+    h1 { text-align: center; }
+    h2 {
+      font-size: 20px;
+      border-bottom: 1px solid #d8e0ea;
+      padding-bottom: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      align-items: end;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    label {
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 11px;
+      border-radius: 6px;
+      border: 1px solid #c7d1dc;
+      font-size: 14px;
+    }
+    button {
+      border: none;
+      background: #255b8f;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover { opacity: .92; }
+    .btn-danger { background: #b3261e; }
+    .btn-edit { background: #d88900; }
+    .btn-secondary { background: #677483; }
+    .btn-success { background: #157347; }
+    .actions {
+      display: flex;
+      gap: 6px;
+      min-width: 150px;
+    }
+    .actions button {
+      padding: 8px;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #d9e1ea;
+      padding: 9px;
+      text-align: left;
+    }
+    th {
+      background: #0f3d70;
+      color: white;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .box {
+      background: #eef5fc;
+      border-left: 5px solid #255b8f;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .box small { display: block; color: #555; margin-bottom: 6px; }
+    .ok { color: #157347; font-weight: bold; }
+    .no { color: #b3261e; font-weight: bold; }
+    .muted { color: #667; font-size: 12px; }
+    .login-box {
+      max-width: 520px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 14px;
+      padding: 26px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    }
+    .login-box h1 { color:#556B2F; }
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    .btn-olive { background:#556B2F; }
+    .btn-olive:hover { background:#6B8E23; opacity:1; }
+    .erro { color:#b3261e; font-weight:bold; }
+    .sucesso { color:#157347; font-weight:bold; }
+    @media (max-width: 850px) {
+      .grid, .grid-4, .summary { grid-template-columns: 1fr; }
+      table { font-size: 12px; }
+      .actions { flex-direction: column; }
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      button, .no-print { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    }
+
+    @media print {
+      body.modo-impressao-consultor .secao-vendedores,
+      body.modo-impressao-consultor .secao-parcelas-cadastro,
+      body.modo-impressao-consultor #statusSistema {
+        display: none !important;
+      }
+
+      body.modo-impressao-consultor #cabecalhoImpressaoConsultor {
+        display: block !important;
+      }
+
+      body.modo-impressao-consultor .secao-relatorio-mensal > .grid {
+        display: none !important;
+      }
+
+      body.modo-impressao-consultor .secao-meta-mensal,
+      body.modo-impressao-consultor .secao-meta-realizada,
+      body.modo-impressao-consultor .secao-relatorio-mensal {
+        display: block !important;
+      }
+
+      body.modo-impressao-consultor input,
+      body.modo-impressao-consultor select {
+        border: none !important;
+        padding: 2px !important;
+        background: transparent !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+      }
+
+      body.modo-impressao-consultor .container {
+        max-width: 100%;
+      }
+
+      body.modo-impressao-consultor table {
+        font-size: 11px;
+      }
+
+      body.modo-impressao-consultor .summary {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div id="loginBox" class="login-box">
+  <h1>Metas e Comissão</h1>
+  <p>Digite seu e-mail cadastrado para acessar o sistema.</p>
+  <label>E-mail</label>
+  <input id="emailLogin" type="email" placeholder="seuemail@gmail.com" />
+  <div style="margin-top:12px;">
+    <button class="btn-olive" onclick="fazerLogin()">Entrar</button>
+  </div>
+  <p id="msgLogin" class="muted"></p>
+</div>
+
+<div id="appBox" class="container" style="display:none;">
+  <div class="topbar no-print">
+    <div><strong>Usuário:</strong> <span id="usuarioInfo">-</span></div>
+    <div><button class="btn-secondary" onclick="sairSistema()">Sair</button></div>
+  </div>
+  <h1>Relatório de Metas e Comissão</h1>
+  <div id="statusSistema" class="muted" style="text-align:center;margin-bottom:12px;">Carregando dados...</div>
+  <div id="cabecalhoImpressaoConsultor" style="display:none;text-align:center;margin-bottom:14px;">
+    <h2 style="border:0;margin-bottom:4px;">Relatório do Consultor</h2>
+    <div><strong>Consultor:</strong> <span id="nomeConsultorImpressao">-</span></div>
+    <div><strong>Competência:</strong> <span id="competenciaImpressao">-</span></div>
+  </div>
+
+  <div class="card secao-vendedores">
+    <h2>1. Cadastro de Vendedor / Colaborador</h2>
+    <div class="grid">
+      <div>
+        <label>Nome do vendedor</label>
+        <input id="vendedorNome" placeholder="Ex: João Silva" />
+      </div>
+      <div>
+        <label>Cargo / Função</label>
+        <input id="vendedorCargo" placeholder="Ex: Consultor Comercial" />
+      </div>
+      <div>
+        <label id="labelBotaoVendedor">Adicionar vendedor</label>
+        <button id="btnVendedor" onclick="salvarVendedor()">Adicionar</button>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:12px;">
+      <div>
+        <label>Pesquisar vendedor</label>
+        <input id="pesquisaVendedor" placeholder="Digite para pesquisar..." oninput="renderVendedores()" />
+      </div>
+      <div class="box">
+        <small>Total de vendedores cadastrados</small>
+        <span id="totalVendedores">0</span>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button class="btn-secondary" onclick="cancelarEdicaoVendedor()">Limpar / Cancelar edição</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cargo / Função</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaVendedores"></tbody>
+    </table>
+  </div>
+
+  <div class="card secao-meta-mensal">
+    <h2>2. Cadastro de Meta Mensal</h2>
+    <div class="grid-4">
+      <div>
+        <label>Vendedor</label>
+        <select id="metaVendedor" onchange="carregarMetaSalva()"></select>
+      </div>
+      <div>
+        <label>Mês/Ano - Mês</label>
+        <select id="metaMesSelect" onchange="atualizarCampoMes('meta'); carregarMetaSalva();"></select>
+      </div>
+      <div>
+        <label>Mês/Ano - Ano</label>
+        <select id="metaAnoSelect" onchange="atualizarCampoMes('meta'); carregarMetaSalva();"></select>
+        <input type="hidden" id="metaMes" />
+      </div>
+      <div>
+        <label>Meta Geral</label>
+        <input id="metaGeral" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Meta Convênio</label>
+        <input id="metaConvenio" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Meta Programas e Laudos</label>
+        <input id="metaProgramas" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Meta Pacotes</label>
+        <input id="metaPacotes" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Nível mínimo (%)</label>
+        <input id="percMinima" value="0,75" />
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button onclick="salvarMeta()">Salvar meta</button>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button class="btn-edit" onclick="editarMetaSalva()">Editar</button>
+      </div>
+    </div>
+    <p class="muted">Percentuais usados: Mínima 0,75%, Básica 1% e Master 1,25%.</p>
+  </div>
+
+  <div class="card secao-meta-realizada">
+    <h2>3. Meta Realizada</h2>
+    <div class="grid-4">
+      <div>
+        <label>Vendedor</label>
+        <select id="vendaVendedor" onchange="carregarVendaSalva()"></select>
+      </div>
+      <div>
+        <label>Mês de fechamento - Mês</label>
+        <select id="vendaMesSelect" onchange="atualizarCampoMes('venda'); carregarVendaSalva();"></select>
+      </div>
+      <div>
+        <label>Mês de fechamento - Ano</label>
+        <select id="vendaAnoSelect" onchange="atualizarCampoMes('venda'); carregarVendaSalva();"></select>
+        <input type="hidden" id="vendaMes" />
+      </div>
+      <div>
+        <label>Meta Geral realizada</label>
+        <input id="vendaGeral" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Convênio realizado</label>
+        <input id="vendaConvenio" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Programas e Laudos realizados</label>
+        <input id="vendaProgramas" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Programas e Laudos pagos</label>
+        <input id="vendaProgramasPagos" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Pacotes realizados</label>
+        <input id="vendaPacotes" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button onclick="salvarVenda()">Salvar realização</button>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button class="btn-edit" onclick="editarVendaSalva()">Editar</button>
+      </div>
+    </div>
+    <p class="muted">O atingimento da meta segue pela Meta Geral realizada. Para comissão do mês, será considerado: Convênio realizado em 12 parcelas + Programas e Laudos pagos + Pacotes realizados.</p>
+  </div>
+
+  <div class="card secao-parcelas-cadastro">
+    <h2>4. Pagamento de Parcelas Recebidas</h2>
+    <div class="grid-4">
+      <div>
+        <label>Vendedor</label>
+        <select id="parcelaVendedor"></select>
+      </div>
+      <div>
+        <label>Mês de fechamento da venda - Mês</label>
+        <select id="parcelaMesVendaMesSelect" onchange="atualizarCampoMes('parcelaMesVenda')"></select>
+      </div>
+      <div>
+        <label>Mês de fechamento da venda - Ano</label>
+        <select id="parcelaMesVendaAnoSelect" onchange="atualizarCampoMes('parcelaMesVenda')"></select>
+        <input type="hidden" id="parcelaMesVenda" />
+      </div>
+      <div>
+        <label>Mês de recebimento - Mês</label>
+        <select id="parcelaMesRecebimentoMesSelect" onchange="atualizarCampoMes('parcelaMesRecebimento')"></select>
+      </div>
+      <div>
+        <label>Mês de recebimento - Ano</label>
+        <select id="parcelaMesRecebimentoAnoSelect" onchange="atualizarCampoMes('parcelaMesRecebimento')"></select>
+        <input type="hidden" id="parcelaMesRecebimento" />
+      </div>
+      <div>
+        <label>Empresa</label>
+        <input id="parcelaEmpresa" type="text" placeholder="Nome da empresa" />
+      </div>
+      <div>
+        <label>Valor recebido</label>
+        <input id="parcelaValor" inputmode="decimal" placeholder="R$ 0,00" onblur="formatarCampoMoeda(this)" />
+      </div>
+      <div>
+        <label>Quantidade de Parcelas</label>
+        <input id="parcelaQuantidade" type="number" min="1" placeholder="Ex: 5" />
+      </div>
+      <div>
+        <label>Nº da Parcela Recebida</label>
+        <input id="parcelaNumero" type="number" min="1" placeholder="Ex: 3" />
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button onclick="salvarParcela()">Adicionar parcela recebida</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card secao-relatorio-mensal">
+    <h2>5. Relatório Mensal</h2>
+    <div class="grid">
+      <div>
+        <label>Mês/Ano do relatório - Mês</label>
+        <select id="relatorioMesSelect" onchange="atualizarCampoMes('relatorio'); renderRelatorio();"></select>
+      </div>
+      <div>
+        <label>Mês/Ano do relatório - Ano</label>
+        <select id="relatorioAnoSelect" onchange="atualizarCampoMes('relatorio'); renderRelatorio();"></select>
+        <input type="hidden" id="relatorioMes" />
+      </div>
+      <div>
+        <label>Vendedor</label>
+        <select id="relatorioVendedor" onchange="renderRelatorio()"></select>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button onclick="gerarPdfConsultor()">Imprimir / Salvar em PDF</button>
+      </div>
+    </div>
+
+    <div class="summary" style="margin-top:14px;">
+      <div class="box"><small>Total realizado no mês</small><span id="sumVendas">R$ 0,00</span></div>
+      <div class="box"><small>Total recebido no mês</small><span id="sumRecebido">R$ 0,00</span></div>
+      <div class="box"><small>Valor comissão do mês</small><span id="valorComissaoMeta">R$ 0,00</span></div>
+      <div class="box"><small>Total de comissões recebidas</small><span id="sumComissao">R$ 0,00</span></div>
+      <div class="box" style="background:#eaf7ea;border-left:5px solid #157347;">
+        <small>Comissão Final</small>
+        <span id="sumComissaoFinal">R$ 0,00</span>
+      </div>
+      <div class="box"><small>Status geral</small><span id="sumStatus">-</span></div>
+    </div>
+
+    <h3>Metas e Realizações</h3>
+    <p class="muted">A comissão de Convênio realizado aparece em 12 parcelas mensais. A comissão mensal usa: Convênio 12x + Programas e Laudos pagos + Pacotes realizados.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Vendedor</th>
+          <th>Mês</th>
+          <th>Meta Geral</th>
+          <th>Realizado Geral</th>
+          <th>Status</th>
+          <th>% Comissão</th>
+          <th>Comissão Programas e Laudos pagos</th>
+          <th>Comissão Pacotes realizados</th>
+          <th>Comissão Convênio 12x</th>
+          <th>Valor comissão do mês</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaMetas"></tbody>
+    </table>
+
+    <h3>Parcelas Recebidas e Comissão</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Vendedor</th>
+          <th>Mês Fechamento</th>
+          <th>Mês Recebimento</th>
+          <th>Empresa</th>
+          <th>Parcela</th>
+          <th>Valor Recebido</th>
+          <th>% Aplicado</th>
+          <th>Comissão</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaParcelas"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzJar7iwNTPR0dI01rRg0i7AconK4tuXMws-g5LKeyFHf3WP8Vd0nFaM6lQsJ5QoXZk/exec';
+
+  async function api(acao, dados = {}) {
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ acao, ...dados })
+    });
+    const txt = await resp.text();
+    try { return JSON.parse(txt); }
+    catch(e) { console.error(txt); throw new Error('Resposta inválida da API'); }
+  }
+
+  async function fazerLogin() {
+    const email = document.getElementById('emailLogin').value.trim().toLowerCase();
+    const msg = document.getElementById('msgLogin');
+    if (!email) { msg.className = 'erro'; msg.textContent = 'Digite seu e-mail.'; return; }
+    msg.className = 'muted';
+    msg.textContent = 'Verificando acesso...';
+    try {
+      const r = await api('login', { email });
+      if (!r.ok) { msg.className = 'erro'; msg.textContent = r.erro || 'Acesso negado.'; return; }
+      usuarioLogado = r.usuario;
+      localStorage.setItem('usuario_metas_email', email);
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('appBox').style.display = 'block';
+      document.getElementById('usuarioInfo').textContent = `${usuarioLogado.nome} - ${usuarioLogado.perfil}`;
+      carregarDadosOnline();
+    } catch(e) {
+      msg.className = 'erro';
+      msg.textContent = 'Erro ao conectar com a API: ' + e.message;
+    }
+  }
+
+  function sairSistema() {
+    localStorage.removeItem('usuario_metas_email');
+    location.reload();
+  }
+  let vendedores = [];
+  let metas = [];
+  let vendas = [];
+  let parcelas = [];
+  let vendedorEditando = null;
+  let dadosCarregados = false;
+  let usuarioLogado = null;
+
+
+  const nomesMeses = [
+    { valor: '01', nome: 'Janeiro' },
+    { valor: '02', nome: 'Fevereiro' },
+    { valor: '03', nome: 'Março' },
+    { valor: '04', nome: 'Abril' },
+    { valor: '05', nome: 'Maio' },
+    { valor: '06', nome: 'Junho' },
+    { valor: '07', nome: 'Julho' },
+    { valor: '08', nome: 'Agosto' },
+    { valor: '09', nome: 'Setembro' },
+    { valor: '10', nome: 'Outubro' },
+    { valor: '11', nome: 'Novembro' },
+    { valor: '12', nome: 'Dezembro' }
+  ];
+
+  function preencherMesAno(prefixo) {
+    const mesSelect = document.getElementById(prefixo + 'MesSelect');
+    const anoSelect = document.getElementById(prefixo + 'AnoSelect');
+    if (!mesSelect || !anoSelect) return;
+
+    const anoAtual = new Date().getFullYear();
+    const mesAtual = String(new Date().getMonth() + 1).padStart(2, '0');
+
+    mesSelect.innerHTML = '<option value="">Mês</option>';
+    nomesMeses.forEach(m => {
+      mesSelect.innerHTML += `<option value="${m.valor}">${m.nome}</option>`;
+    });
+
+    anoSelect.innerHTML = '<option value="">Ano</option>';
+    for (let ano = 2020; ano <= 2100; ano++) {
+      anoSelect.innerHTML += `<option value="${ano}">${ano}</option>`;
+    }
+
+    mesSelect.value = mesAtual;
+    anoSelect.value = anoAtual;
+    atualizarCampoMes(prefixo);
+  }
+
+  function atualizarCampoMes(prefixo) {
+    const mesSelect = document.getElementById(prefixo + 'MesSelect');
+    const anoSelect = document.getElementById(prefixo + 'AnoSelect');
+
+    let campoHidden = document.getElementById(prefixo + 'Mes');
+
+    // Para os campos de parcela, o valor final precisa ficar exatamente nos IDs usados no salvamento:
+    // parcelaMesVenda e parcelaMesRecebimento.
+    if (prefixo === 'parcelaMesVenda') {
+      campoHidden = document.getElementById('parcelaMesVenda');
+    }
+
+    if (prefixo === 'parcelaMesRecebimento') {
+      campoHidden = document.getElementById('parcelaMesRecebimento');
+    }
+
+    if (!mesSelect || !anoSelect || !campoHidden) return;
+
+    campoHidden.value = (mesSelect.value && anoSelect.value) ? `${anoSelect.value}-${mesSelect.value}` : '';
+  }
+
+  function inicializarCamposMesAno() {
+    ['meta', 'venda', 'parcelaMesVenda', 'parcelaMesRecebimento', 'relatorio'].forEach(preencherMesAno);
+  }
+
+  function moeda(valor) {
+  return (valor || 0).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+}
+
+function numero(valor) {
+  if (typeof valor === 'number') return valor;
+  if (!valor) return 0;
+
+  let texto = String(valor)
+    .replace('R$', '')
+    .replace(/\s/g, '')
+    .trim();
+
+  if (texto.includes(',') && texto.includes('.')) {
+    texto = texto.replace(/\./g, '').replace(',', '.');
+  } else if (texto.includes(',')) {
+    texto = texto.replace(',', '.');
+  }
+
+  return parseFloat(texto) || 0;
+}
+
+function formatarCampoMoeda(campo) {
+  campo.value = moeda(numero(campo.value));
+}
+
+  async function salvarTudo(tipo, mensagemSucesso) {
+    const pacote = {};
+
+    if (tipo === 'vendedores') pacote.vendedores = vendedores;
+    if (tipo === 'metas') pacote.metas = metas;
+    if (tipo === 'vendas') pacote.vendas = vendas;
+    if (tipo === 'parcelas') pacote.parcelas = parcelas;
+
+    document.getElementById('statusSistema').textContent = 'Salvando dados...';
+
+    try {
+      const resposta = await api('salvarDados', { pacote });
+      if (!resposta.ok) throw new Error(resposta.erro || 'Erro ao salvar dados.');
+      document.getElementById('statusSistema').textContent = 'Dados salvos na planilha.';
+      if (mensagemSucesso) alert(mensagemSucesso);
+    } catch (erro) {
+      document.getElementById('statusSistema').textContent = 'Erro ao salvar dados.';
+      console.error('Erro ao salvar:', erro);
+      alert('Erro ao salvar no Google Sheets: ' + (erro && erro.message ? erro.message : erro));
+    }
+  }
+
+  async function carregarDadosOnline() {
+    document.body.style.cursor = 'wait';
+    document.getElementById('statusSistema').textContent = 'Carregando dados da planilha...';
+
+    try {
+      const resposta = await api('carregarDados');
+      let dados = resposta.dados || {};
+      vendedores = dados.vendedores || [];
+      metas = normalizarNumeros(dados.metas || [], ['geral', 'convenio', 'programas', 'pacotes']);
+      vendas = normalizarNumeros(dados.vendas || [], ['geral', 'convenio', 'programas', 'programasPagos', 'pacotes', 'total']);
+      parcelas = normalizarNumeros(dados.parcelas || [], ['valor', 'quantidadeParcelas', 'numeroParcela']);
+
+      dadosCarregados = true;
+      document.body.style.cursor = 'default';
+      document.getElementById('statusSistema').textContent = 'Dados carregados da planilha.';
+      atualizarTela();
+    } catch (erro) {
+      document.body.style.cursor = 'default';
+      document.getElementById('statusSistema').textContent = 'Erro ao carregar dados.';
+      console.error('Erro ao carregar:', erro);
+      alert('Erro ao carregar dados do Google Sheets: ' + (erro && erro.message ? erro.message : erro));
+    }
+  }
+
+  function normalizarNumeros(lista, campos) {
+  return lista.map(item => {
+    campos.forEach(campo => {
+      if (item[campo] !== undefined && item[campo] !== '') {
+        item[campo] = numero(item[campo]);
+      }
+    });
+    return item;
+  });
+}
+
+  function salvarVendedor() {
+    const nome = document.getElementById('vendedorNome').value.trim();
+    const cargo = document.getElementById('vendedorCargo').value.trim();
+
+    if (!nome || !cargo) {
+      alert('Preencha o nome do vendedor e o cargo/função.');
+      return;
+    }
+
+    const duplicado = vendedores.some((v, i) => 
+      v.nome.toLowerCase() === nome.toLowerCase() && i !== vendedorEditando
+    );
+
+    if (duplicado) {
+      alert('Já existe um vendedor cadastrado com esse nome.');
+      return;
+    }
+
+    if (vendedorEditando !== null) {
+      const nomeAntigo = vendedores[vendedorEditando].nome;
+      vendedores[vendedorEditando] = { nome, cargo };
+
+      metas.forEach(m => { if (m.vendedor === nomeAntigo) m.vendedor = nome; });
+      vendas.forEach(v => { if (v.vendedor === nomeAntigo) v.vendedor = nome; });
+      parcelas.forEach(p => { if (p.vendedor === nomeAntigo) p.vendedor = nome; });
+
+      vendedorEditando = null;
+      document.getElementById('btnVendedor').textContent = 'Adicionar';
+      document.getElementById('labelBotaoVendedor').textContent = 'Adicionar vendedor';
+    } else {
+      vendedores.push({ nome, cargo });
+    }
+
+    document.getElementById('vendedorNome').value = '';
+    document.getElementById('vendedorCargo').value = '';
+
+    renderVendedores();
+    preencherSelects();
+    salvarTudo('vendedores', 'Vendedor salvo com sucesso.');
+  }
+
+  function editarVendedor(index) {
+    vendedorEditando = index;
+    document.getElementById('vendedorNome').value = vendedores[index].nome;
+    document.getElementById('vendedorCargo').value = vendedores[index].cargo;
+    document.getElementById('btnVendedor').textContent = 'Salvar edição';
+    document.getElementById('labelBotaoVendedor').textContent = 'Editar vendedor';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function excluirVendedor(index) {
+    const vendedor = vendedores[index];
+    const confirmar = confirm(`Deseja excluir o vendedor ${vendedor.nome}? As metas, realizações e parcelas vinculadas também serão removidas.`);
+    if (!confirmar) return;
+
+    vendedores.splice(index, 1);
+    metas = metas.filter(m => m.vendedor !== vendedor.nome);
+    vendas = vendas.filter(v => v.vendedor !== vendedor.nome);
+    parcelas = parcelas.filter(p => p.vendedor !== vendedor.nome);
+
+    renderVendedores();
+    preencherSelects();
+    salvarTudo('vendedores', 'Vendedor salvo com sucesso.');
+  }
+
+  function cancelarEdicaoVendedor() {
+    vendedorEditando = null;
+    document.getElementById('vendedorNome').value = '';
+    document.getElementById('vendedorCargo').value = '';
+    document.getElementById('btnVendedor').textContent = 'Adicionar';
+    document.getElementById('labelBotaoVendedor').textContent = 'Adicionar vendedor';
+  }
+
+  function renderVendedores() {
+    const tbody = document.getElementById('tabelaVendedores');
+    const filtro = document.getElementById('pesquisaVendedor').value.toLowerCase();
+    tbody.innerHTML = '';
+
+    vendedores
+      .map((v, i) => ({...v, indexOriginal: i}))
+      .filter(v => v.nome.toLowerCase().includes(filtro) || v.cargo.toLowerCase().includes(filtro))
+      .forEach(v => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${v.nome}</td>
+            <td>${v.cargo}</td>
+            <td>
+              <div class="actions">
+                <button class="btn-edit" onclick="editarVendedor(${v.indexOriginal})">Editar</button>
+                <button class="btn-danger" onclick="excluirVendedor(${v.indexOriginal})">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+    document.getElementById('totalVendedores').textContent = vendedores.length;
+  }
+
+  function preencherSelects() {
+    const ids = ['metaVendedor', 'vendaVendedor', 'parcelaVendedor', 'relatorioVendedor'];
+    ids.forEach(id => {
+      const sel = document.getElementById(id);
+      const valorAtual = sel.value;
+      sel.innerHTML = id === 'relatorioVendedor' ? '<option value="">Todos</option>' : '<option value="">Selecione</option>';
+      vendedores.forEach(v => {
+        sel.innerHTML += `<option value="${v.nome}">${v.nome}</option>`;
+      });
+      sel.value = valorAtual;
+    });
+  }
+
+
+  function limparCamposMetaMensal() {
+    document.getElementById('metaGeral').value = '';
+    document.getElementById('metaConvenio').value = '';
+    document.getElementById('metaProgramas').value = '';
+    document.getElementById('metaPacotes').value = '';
+  }
+
+  function carregarMetaSalva() {
+    atualizarCampoMes('meta');
+
+    const vendedor = document.getElementById('metaVendedor').value;
+    const mes = document.getElementById('metaMes').value;
+
+    if (!vendedor || !mes) {
+      limparCamposMetaMensal();
+      return;
+    }
+
+    const meta = metas.find(m => m.vendedor === vendedor && m.mes === mes);
+
+    if (!meta) {
+      limparCamposMetaMensal();
+      return;
+    }
+
+    document.getElementById('metaGeral').value = moeda(meta.geral || 0);
+    document.getElementById('metaConvenio').value = moeda(meta.convenio || 0);
+    document.getElementById('metaProgramas').value = moeda(meta.programas || 0);
+    document.getElementById('metaPacotes').value = moeda(meta.pacotes || 0);
+  }
+
+  function editarMetaSalva() {
+    const vendedor = document.getElementById('metaVendedor').value;
+    const mes = document.getElementById('metaMes').value;
+
+    if (!vendedor || !mes) {
+      alert('Selecione o vendedor e o mês/ano para editar a meta mensal.');
+      return;
+    }
+
+    const meta = metas.find(m => m.vendedor === vendedor && m.mes === mes);
+
+    if (!meta) {
+      alert('Não existe meta mensal salva para este vendedor neste mês.');
+      return;
+    }
+
+    carregarMetaSalva();
+    alert('Meta mensal carregada. Altere os valores desejados e clique em "Salvar meta" para gravar a edição.');
+  }
+
+  function salvarMeta() {
+    const item = {
+      vendedor: document.getElementById('metaVendedor').value,
+      mes: document.getElementById('metaMes').value,
+      geral: numero(document.getElementById('metaGeral').value),
+      convenio: numero(document.getElementById('metaConvenio').value),
+      programas: numero(document.getElementById('metaProgramas').value),
+      pacotes: numero(document.getElementById('metaPacotes').value)
+    };
+    if (!item.vendedor || !item.mes || !item.geral) {
+      alert('Preencha vendedor, mês e Meta Geral.');
+      return;
+    }
+    metas = metas.filter(m => !(m.vendedor === item.vendedor && m.mes === item.mes));
+    metas.push(item);
+    carregarMetaSalva();
+    renderRelatorio();
+    salvarTudo('metas', 'Meta mensal salva/atualizada.');
+  }
+
+
+  function limparCamposVendaRealizada() {
+    document.getElementById('vendaGeral').value = '';
+    document.getElementById('vendaConvenio').value = '';
+    document.getElementById('vendaProgramas').value = '';
+    document.getElementById('vendaProgramasPagos').value = '';
+    document.getElementById('vendaPacotes').value = '';
+  }
+
+  function carregarVendaSalva() {
+  atualizarCampoMes('venda');
+
+  const vendedor = document.getElementById('vendaVendedor').value;
+  const mes = document.getElementById('vendaMes').value;
+
+  if (!vendedor || !mes) {
+    limparCamposVendaRealizada();
+    return;
+  }
+
+  const venda = vendas.find(v =>
+    String(v.vendedor).trim().toLowerCase() === String(vendedor).trim().toLowerCase() &&
+    String(v.mes).trim() === String(mes).trim()
+  );
+
+  if (!venda) {
+    limparCamposVendaRealizada();
+    return;
+  }
+
+  document.getElementById('vendaGeral').value = moeda(numero(venda.geral));
+  document.getElementById('vendaConvenio').value = moeda(numero(venda.convenio));
+  document.getElementById('vendaProgramas').value = moeda(numero(venda.programas));
+  document.getElementById('vendaProgramasPagos').value = moeda(numero(venda.programasPagos));
+  document.getElementById('vendaPacotes').value = moeda(numero(venda.pacotes));
+}
+    function editarVendaSalva() {
+    const vendedor = document.getElementById('vendaVendedor').value;
+    const mes = document.getElementById('vendaMes').value;
+
+    if (!vendedor || !mes) {
+      alert('Selecione o vendedor e o mês/ano para editar a meta realizada.');
+      return;
+    }
+
+    const venda = vendas.find(v => v.vendedor === vendedor && v.mes === mes);
+
+    if (!venda) {
+      alert('Não existe meta realizada salva para este vendedor neste mês.');
+      return;
+    }
+
+    carregarVendaSalva();
+    alert('Meta realizada carregada. Altere os valores desejados e clique em "Salvar realização" para gravar a edição.');
+  }
+
+  function salvarVenda() {
+    const item = {
+      vendedor: document.getElementById('vendaVendedor').value,
+      mes: document.getElementById('vendaMes').value,
+      geral: numero(document.getElementById('vendaGeral').value),
+      convenio: numero(document.getElementById('vendaConvenio').value),
+      programas: numero(document.getElementById('vendaProgramas').value),
+      programasPagos: numero(document.getElementById('vendaProgramasPagos').value),
+      pacotes: numero(document.getElementById('vendaPacotes').value),
+      total: 0
+    };
+    if (!item.vendedor || !item.mes || !item.geral) {
+      alert('Preencha vendedor, mês de fechamento e Meta Geral realizada.');
+      return;
+    }
+    item.total = item.geral;
+    vendas = vendas.filter(v => !(v.vendedor === item.vendedor && v.mes === item.mes));
+    vendas.push(item);
+    carregarVendaSalva();
+    renderRelatorio();
+    salvarTudo('vendas', 'Meta realizada salva/atualizada.');
+  }
+
+  function salvarParcela() {
+    atualizarCampoMes('parcelaMesVenda');
+    atualizarCampoMes('parcelaMesRecebimento');
+
+    const item = {
+      vendedor: document.getElementById('parcelaVendedor').value,
+      mesVenda: document.getElementById('parcelaMesVenda').value,
+      mesRecebimento: document.getElementById('parcelaMesRecebimento').value,
+      empresa: document.getElementById('parcelaEmpresa').value.trim(),
+      valor: numero(document.getElementById('parcelaValor').value),
+      quantidadeParcelas: parseInt(document.getElementById('parcelaQuantidade').value, 10) || 0,
+      numeroParcela: parseInt(document.getElementById('parcelaNumero').value, 10) || 0
+    };
+    if (!item.vendedor) {
+      alert('Selecione o vendedor.');
+      return;
+    }
+    if (!item.mesVenda) {
+      alert('Selecione o mês e o ano de fechamento da venda.');
+      return;
+    }
+    if (!item.mesRecebimento) {
+      alert('Selecione o mês e o ano de recebimento.');
+      return;
+    }
+    if (!item.empresa) {
+      alert('Preencha o nome da empresa.');
+      return;
+    }
+    if (!item.valor) {
+      alert('Preencha o valor recebido.');
+      return;
+    }
+    if (!item.quantidadeParcelas) {
+      alert('Preencha a quantidade de parcelas.');
+      return;
+    }
+    if (!item.numeroParcela) {
+      alert('Preencha o Nº da Parcela Recebida.');
+      return;
+    }
+    if (item.numeroParcela > item.quantidadeParcelas) {
+      alert('O Nº da Parcela Recebida não pode ser maior que a Quantidade de Parcelas.');
+      return;
+    }
+    parcelas.push(item);
+    renderRelatorio();
+    salvarTudo('parcelas', 'Parcela recebida adicionada.');
+
+    document.getElementById('parcelaEmpresa').value = '';
+    document.getElementById('parcelaValor').value = '';
+    document.getElementById('parcelaQuantidade').value = '';
+    document.getElementById('parcelaNumero').value = '';
+  }
+
+  function percentualComissao(vendedor, mes) {
+    const meta = metas.find(m => m.vendedor === vendedor && m.mes === mes);
+    const venda = vendas.find(v => v.vendedor === vendedor && v.mes === mes);
+    if (!meta || !venda || !meta.geral) return 0;
+
+    const atingimento = (venda.geral / meta.geral) * 100;
+
+    if (atingimento >= 125) return 1.25;
+    if (atingimento >= 100) return 1.00;
+    if (atingimento >= 75) return 0.75;
+    return 0;
+  }
+
+  function statusMeta(vendedor, mes) {
+    const meta = metas.find(m => m.vendedor === vendedor && m.mes === mes);
+    const venda = vendas.find(v => v.vendedor === vendedor && v.mes === mes);
+    if (!meta || !venda) return { texto: 'Sem dados', classe: 'no' };
+
+    const perc = percentualComissao(vendedor, mes);
+    if (perc === 1.25) return { texto: 'Master atingida', classe: 'ok' };
+    if (perc === 1.00) return { texto: 'Básica atingida', classe: 'ok' };
+    if (perc === 0.75) return { texto: 'Mínima atingida', classe: 'ok' };
+    return { texto: 'Meta não atingida', classe: 'no' };
+  }
+
+
+  function somarMeses(mesAno, quantidade) {
+    if (!mesAno) return '';
+    const partes = mesAno.split('-');
+    const data = new Date(parseInt(partes[0], 10), parseInt(partes[1], 10) - 1 + quantidade, 1);
+    return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  function diferencaMeses(inicio, fim) {
+    if (!inicio || !fim) return null;
+    const a = inicio.split('-').map(Number);
+    const b = fim.split('-').map(Number);
+    return (b[0] - a[0]) * 12 + (b[1] - a[1]);
+  }
+
+  function comissaoVendaNoMes(venda, mesRel) {
+    const perc = percentualComissao(venda.vendedor, venda.mes);
+    if (!perc) {
+      return {
+        perc,
+        programasPagos: 0,
+        pacotes: 0,
+        convenioParcela: 0,
+        totalMes: 0,
+        parcelaConvenioTexto: '-'
+      };
+    }
+
+    const convenio = venda.convenio || 0;
+    const programasPagos = venda.programasPagos || 0;
+    const pacotes = venda.pacotes || 0;
+
+    const comissaoProgramasPagos = programasPagos * (perc / 100);
+    const comissaoPacotes = pacotes * (perc / 100);
+    const comissaoConvenioTotal = convenio * (perc / 100);
+    const comissaoConvenioParcela = comissaoConvenioTotal / 12;
+
+    if (!mesRel) {
+      return {
+        perc,
+        programasPagos: comissaoProgramasPagos,
+        pacotes: comissaoPacotes,
+        convenioParcela: comissaoConvenioTotal,
+        totalMes: comissaoProgramasPagos + comissaoPacotes + comissaoConvenioTotal,
+        parcelaConvenioTexto: convenio > 0 ? '12/12 total' : '-'
+      };
+    }
+
+    const dif = diferencaMeses(venda.mes, mesRel);
+    const convenioNoMes = convenio > 0 && dif !== null && dif >= 0 && dif <= 11;
+    const camposDoMes = venda.mes === mesRel;
+
+    return {
+      perc,
+      programasPagos: camposDoMes ? comissaoProgramasPagos : 0,
+      pacotes: camposDoMes ? comissaoPacotes : 0,
+      convenioParcela: convenioNoMes ? comissaoConvenioParcela : 0,
+      totalMes: (camposDoMes ? comissaoProgramasPagos : 0) + (camposDoMes ? comissaoPacotes : 0) + (convenioNoMes ? comissaoConvenioParcela : 0),
+      parcelaConvenioTexto: convenioNoMes ? `${dif + 1}/12` : '-'
+    };
+  }
+
+  function renderRelatorio() {
+    const mesRel = document.getElementById('relatorioMes').value;
+    const vendedorFiltro = document.getElementById('relatorioVendedor').value;
+    const tbodyMetas = document.getElementById('tabelaMetas');
+    const tbodyParcelas = document.getElementById('tabelaParcelas');
+
+    tbodyMetas.innerHTML = '';
+    tbodyParcelas.innerHTML = '';
+
+    let totalVendas = 0;
+    let totalRecebido = 0;
+    let totalComissao = 0;
+    let valorComissaoMeta = 0;
+    let algumaMeta = false;
+
+    vendas
+      .filter(v => {
+        if (vendedorFiltro && v.vendedor !== vendedorFiltro) return false;
+        if (!mesRel) return true;
+        const c = comissaoVendaNoMes(v, mesRel);
+        return v.mes === mesRel || c.convenioParcela > 0;
+      })
+      .forEach(v => {
+        const meta = metas.find(m => m.vendedor === v.vendedor && m.mes === v.mes) || {};
+        const perc = percentualComissao(v.vendedor, v.mes);
+        const st = statusMeta(v.vendedor, v.mes);
+        const comissoes = comissaoVendaNoMes(v, mesRel);
+
+        if (!mesRel || v.mes === mesRel) {
+          totalVendas += v.geral;
+        }
+
+        valorComissaoMeta += comissoes.totalMes;
+        if (perc > 0) algumaMeta = true;
+
+        tbodyMetas.innerHTML += `
+          <tr>
+            <td>${v.vendedor}</td>
+            <td>${v.mes}</td>
+            <td>${moeda(meta.geral || 0)}</td>
+            <td>${moeda(v.geral)}</td>
+            <td class="${st.classe}">${st.texto}</td>
+            <td>${perc.toFixed(2).replace('.', ',')}%</td>
+            <td>${moeda(comissoes.programasPagos)}</td>
+            <td>${moeda(comissoes.pacotes)}</td>
+            <td>${moeda(comissoes.convenioParcela)} ${comissoes.parcelaConvenioTexto !== '-' ? '(' + comissoes.parcelaConvenioTexto + ')' : ''}</td>
+            <td>${moeda(comissoes.totalMes)}</td>
+          </tr>
+        `;
+      });
+
+    parcelas
+      .filter(p => (!mesRel || p.mesRecebimento === mesRel) && (!vendedorFiltro || p.vendedor === vendedorFiltro))
+      .forEach(p => {
+        const perc = percentualComissao(p.vendedor, p.mesVenda);
+        const comissao = p.valor * (perc / 100);
+        totalRecebido += p.valor;
+        totalComissao += comissao;
+
+        tbodyParcelas.innerHTML += `
+          <tr>
+            <td>${p.vendedor}</td>
+            <td>${p.mesVenda}</td>
+            <td>${p.mesRecebimento}</td>
+            <td>${p.empresa || ''}</td>
+            <td>${p.numeroParcela && p.quantidadeParcelas ? `${p.numeroParcela}/${p.quantidadeParcelas}` : '-'}</td>
+            <td>${moeda(p.valor)}</td>
+            <td>${perc.toFixed(2).replace('.', ',')}%</td>
+            <td>${moeda(comissao)}</td>
+          </tr>
+        `;
+      });
+
+    const comissaoFinal = valorComissaoMeta + totalComissao;
+
+    document.getElementById('sumVendas').textContent = moeda(totalVendas);
+    document.getElementById('sumRecebido').textContent = moeda(totalRecebido);
+    document.getElementById('valorComissaoMeta').textContent = moeda(valorComissaoMeta);
+    document.getElementById('sumComissao').textContent = moeda(totalComissao);
+    document.getElementById('sumComissaoFinal').textContent = moeda(comissaoFinal);
+    document.getElementById('sumStatus').innerHTML = algumaMeta ? '<span class="ok">Com meta atingida</span>' : '<span class="no">Sem meta atingida</span>';
+  }
+
+
+  function nomeMesPorValor(valor) {
+    const item = nomesMeses.find(m => m.valor === valor);
+    return item ? item.nome : valor;
+  }
+
+  function gerarPdfConsultor() {
+    const vendedor = document.getElementById('relatorioVendedor').value;
+
+    if (!vendedor) {
+      alert('Selecione um vendedor no relatório antes de imprimir/salvar em PDF.');
+      return;
+    }
+
+    const mes = document.getElementById('relatorioMesSelect').value;
+    const ano = document.getElementById('relatorioAnoSelect').value;
+
+    document.getElementById('metaVendedor').value = vendedor;
+    document.getElementById('vendaVendedor').value = vendedor;
+
+    if (mes) {
+      document.getElementById('metaMesSelect').value = mes;
+      document.getElementById('vendaMesSelect').value = mes;
+    }
+
+    if (ano) {
+      document.getElementById('metaAnoSelect').value = ano;
+      document.getElementById('vendaAnoSelect').value = ano;
+    }
+
+    atualizarCampoMes('meta');
+    atualizarCampoMes('venda');
+
+    carregarMetaSalva();
+    carregarVendaSalva();
+    renderRelatorio();
+
+    document.getElementById('nomeConsultorImpressao').textContent = vendedor;
+    document.getElementById('competenciaImpressao').textContent =
+      (mes && ano) ? `${nomeMesPorValor(mes)} / ${ano}` : '-';
+
+    document.body.classList.add('modo-impressao-consultor');
+
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove('modo-impressao-consultor');
+      }, 800);
+    }, 200);
+  }
+function aplicarPermissoesUsuario() {
+  if (!usuarioLogado) return;
+
+  const perfil = String(usuarioLogado.perfil).toUpperCase();
+const isAdm = perfil === 'ADM';
+
+console.log('Perfil identificado:', perfil);
+
+if (isAdm) return;
+
+  const vendedorPermitido = usuarioLogado.vendedorVinculado;
+
+  // Oculta cadastro de vendedores
+  const secaoVendedores = document.querySelector('.secao-vendedores');
+  if (secaoVendedores) secaoVendedores.style.display = 'none';
+
+  // Oculta item 2 para usuário comum
+  const secaoMetaMensal = document.querySelector('.secao-meta-mensal');
+  if (secaoMetaMensal) secaoMetaMensal.style.display = 'none';
+
+  // Trava selects no vendedor vinculado
+  ['vendaVendedor', 'parcelaVendedor', 'relatorioVendedor'].forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo) {
+      campo.value = vendedorPermitido;
+      campo.disabled = true;
+    }
+  });
+
+  // Remove botões de edição
+  document.querySelectorAll('.btn-edit, .btn-danger').forEach(btn => {
+    btn.style.display = 'none';
+  });
+
+  // Força relatório apenas do vendedor vinculado
+  const relatorioVendedor = document.getElementById('relatorioVendedor');
+  if (relatorioVendedor) {
+    relatorioVendedor.value = vendedorPermitido;
+  }
+
+  renderRelatorio();
+}
+
+  function atualizarTela() {
+  inicializarCamposMesAno();
+  renderVendedores();
+  preencherSelects();
+  carregarMetaSalva();
+  carregarVendaSalva();
+  renderRelatorio();
+  aplicarPermissoesUsuario();
+}
+function carregarUsuarioLogado() {
+  const emailSalvo = localStorage.getItem('usuario_metas_email') || '';
+  if (emailSalvo) {
+    document.getElementById('emailLogin').value = emailSalvo;
+  }
+}
+
+  carregarUsuarioLogado();
+  
+</script>
+</body>
+</html>
